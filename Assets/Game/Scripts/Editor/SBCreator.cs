@@ -100,7 +100,13 @@ public class SBCreator : Editor
 
     static string GetStateBehaviourName()
     {
-        return Selection.activeObject.name.Replace(" ", "") + "StateBehaviour";
+        AnimatorState aCurState = (AnimatorState)Selection.activeObject;
+        string aBehaviourName = "";
+        if(aCurState != null)
+        {
+            aBehaviourName += aCurState.tag;
+        }
+        return aBehaviourName + Selection.activeObject.name.Replace(" ", "") + "StateBehaviour";
     }
 
     static string GetDefaultStateBehaviour()
