@@ -12,7 +12,8 @@ public class GameDirector : Singleton<GameDirector>
 	public float PowerPelletTime = 2.0f;
 	private float powerPelletCounter = 0.0f;
 	public List<GhostController> Ghosts = new List<GhostController>();
-
+    public int mTotalPellets;
+    public int mPelletsConsumed;
 	public enum States
 	{
 		enState_Normal,
@@ -29,6 +30,8 @@ public class GameDirector : Singleton<GameDirector>
 	{
 		string formatString = System.String.Format("{0:D9}", ScoreValue);
 		ScoreText.text = formatString;
+        mTotalPellets = GameObject.FindObjectsOfType<PelletController>().Length;
+        mPelletsConsumed = 0;
 	}
 
 	public void IncreaseScore(int value)

@@ -125,6 +125,7 @@ public class PacmanController : MonoBehaviour
 		if (_pellet != null)
 		{
 			GameDirector.Instance.IncreaseScore(_pellet.Value);
+            GameDirector.Instance.mPelletsConsumed++;
 			Destroy(_pellet.gameObject);
 		}
 
