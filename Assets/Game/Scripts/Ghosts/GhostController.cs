@@ -19,7 +19,6 @@ public class GhostController : MonoBehaviour
 		_animator = GetComponent<Animator>();
 		GameDirector.Instance.GameStateChanged.AddListener(GameStateChanged);
 
-		Move();
 	}
 
     private bool pathCompleted = false;
