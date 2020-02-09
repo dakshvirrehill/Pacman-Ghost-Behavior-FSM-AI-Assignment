@@ -5,10 +5,10 @@ using UnityEngine;
 public class PinkyChaseStateBehaviour : GhostBehaviour
 {
 
-    //override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
+    {
+        SetupComponentReferences(pFSM);
+    }
 
     //override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
     //{
