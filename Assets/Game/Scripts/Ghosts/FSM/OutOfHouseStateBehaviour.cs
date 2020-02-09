@@ -4,27 +4,53 @@ using UnityEngine;
 
 public class OutOfHouseStateBehaviour : GhostBehaviour
 {
-    public float mWaitTime;
-    float mCurTimer = 0;
+    public float mCollectedPelletPercent;
+    public Vector2 mOutPosition;
+    bool mMoving = false;
+
     override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
     {
         SetupComponentReferences(pFSM);
-        mCurTimer = 0.0f;
+        mController.pathCompletedEvent.AddListener(OutOfHousePathCompleted);
+        mMoving = false;
     }
 
     override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        mCurTimer -= Time.deltaTime;
-        if(mCurTimer <= 0.0f)
+        if(!mMoving)
         {
-            pFSM.SetTrigger("Scatter");
-            mCurTimer = 0.0f;
+            float aCurColPercent = (float) GameDirector.Instance.mPelletsConsumed / (float) GameDirector.Instance.mTotalPellets;
+            if(aCurColPercent <= mCollectedPelletPercent)
+            {
+                mMoving = true;
+                mController.moveToLocation = mOutPosition;
+                mController.moveComplete();
+                if(mController.mPreviousState != mController.mCurrentState)
+                {
+                    mController.mCurrentState = mController.mPreviousState;
+                }
+            }
         }
+    }
+
+    public void OutOfHousePathCompleted()
+    {
+        if (mController.mCurrentState == GhostController.State.Chase)
+        {
+            mFSM.SetTrigger(mController.mChase);
+        }
+        else
+        {
+            mController.mPreviousState = mController.mCurrentState;
+            mController.mCurrentState = GhostController.State.Scatter;
+            mFSM.SetTrigger(mController.mScatter);
+        }
+        mMoving = false;
     }
 
     override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        mController.pathCompletedEvent.RemoveListener(OutOfHousePathCompleted);
     }
 
 }
