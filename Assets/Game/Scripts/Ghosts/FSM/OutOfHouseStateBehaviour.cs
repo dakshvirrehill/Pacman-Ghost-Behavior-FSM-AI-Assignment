@@ -20,7 +20,7 @@ public class OutOfHouseStateBehaviour : GhostBehaviour
         if(!mMoving)
         {
             float aCurColPercent = (float) GameDirector.Instance.mPelletsConsumed / (float) GameDirector.Instance.mTotalPellets;
-            if(aCurColPercent <= mCollectedPelletPercent)
+            if(aCurColPercent >= mCollectedPelletPercent)
             {
                 mMoving = true;
                 mController.moveToLocation = mOutPosition;
