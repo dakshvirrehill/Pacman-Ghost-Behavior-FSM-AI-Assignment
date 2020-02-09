@@ -6,12 +6,35 @@ using UnityEngine.Events;
 
 public class GhostController : MonoBehaviour 
 {
-	public Vector2 ReturnLocation = new Vector2(0, 0);
+	public enum State
+    {
+        InHouse,
+        Scatter,
+        Chase
+    }
+    
+    public Vector2 ReturnLocation = new Vector2(0, 0);
 
 	private Animator _animator;
     public Transform PacMan;
 	public Vector2 moveToLocation;
 	public float speed;
+
+    public State mCurrentState = State.InHouse;
+    [HideInInspector]
+    public State mPreviousState = State.InHouse;
+
+    [Header("FSM Trigger Names")]
+    public string mChase;
+    public string mScatter;
+    public string mDead;
+    public string mRestart;
+    public string mToHouse;
+    public string mFright;
+
+    [Header("Animator Bool Names")]
+    public string mIsGhost;
+    public string mIsDead;
 
 
 	void Start()
