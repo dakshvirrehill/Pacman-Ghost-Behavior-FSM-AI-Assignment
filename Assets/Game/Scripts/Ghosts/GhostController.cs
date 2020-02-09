@@ -48,7 +48,7 @@ public class GhostController : MonoBehaviour
 		}
 	}
 
-	public IEnumerator WaitToMove()
+	IEnumerator WaitToMove()
 	{
 		yield return new WaitForSeconds(1);
 		Move();

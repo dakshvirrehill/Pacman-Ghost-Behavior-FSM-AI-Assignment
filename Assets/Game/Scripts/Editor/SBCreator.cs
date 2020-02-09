@@ -67,6 +67,12 @@ public class SBCreator : Editor
             return;
         }
         string aPath = GetStateBehaviourPath();
+
+        if(!File.Exists(aPath))
+        {
+            return;
+        }
+
         string aAssetPath = aPath.Substring(aPath.IndexOf("Assets"));
         aCurState.AddStateMachineBehaviour(((MonoScript)AssetDatabase.LoadAssetAtPath(aAssetPath, typeof(MonoScript))).GetClass());
     }
@@ -89,7 +95,7 @@ public class SBCreator : Editor
 
     static string GetStateBehaviourPath()
     {
-       return Application.dataPath + "/Game/Scripts/FSM/" + GetStateBehaviourName() +".cs";
+       return Application.dataPath + "/Game/Scripts/Ghosts/FSM/" + GetStateBehaviourName() +".cs";
     }
 
     static string GetStateBehaviourName()
