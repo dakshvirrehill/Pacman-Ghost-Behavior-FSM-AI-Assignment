@@ -8,17 +8,27 @@ public class InkyChaseStateBehaviour : GhostBehaviour
     override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
     {
         SetupComponentReferences(pFSM);
+        if (mReverseDirection)
+        {
+            ReverseDirection();
+        }
+
     }
 
-    //override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (!mController.mIsChasing)
+        {
+            mReverseDirection = true;
+            pFSM.SetTrigger(mController.mScatter);
+        }
 
-    //override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    }
+
+    override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        StateExit();
+    }
 
 }
 

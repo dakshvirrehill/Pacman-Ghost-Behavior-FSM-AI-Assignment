@@ -5,7 +5,7 @@ using UnityEngine;
 public class OutOfHouseStateBehaviour : GhostBehaviour
 {
     public float mCollectedPelletPercent;
-    public Vector2 mOutPosition;
+    public Vector2 mOutPosition = new Vector2(0,2);
     bool mMoving = false;
 
     override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
@@ -25,24 +25,18 @@ public class OutOfHouseStateBehaviour : GhostBehaviour
                 mMoving = true;
                 mController.moveToLocation = mOutPosition;
                 mController.moveComplete();
-                if(mController.mPreviousState != mController.mCurrentState)
-                {
-                    mController.mCurrentState = mController.mPreviousState;
-                }
             }
         }
     }
 
-    public void OutOfHousePathCompleted()
+    void OutOfHousePathCompleted()
     {
-        if (mController.mCurrentState == GhostController.State.Chase)
+        if (mController.mIsChasing)
         {
             mFSM.SetTrigger(mController.mChase);
         }
         else
         {
-            mController.mPreviousState = mController.mCurrentState;
-            mController.mCurrentState = GhostController.State.Scatter;
             mFSM.SetTrigger(mController.mScatter);
         }
         mMoving = false;
