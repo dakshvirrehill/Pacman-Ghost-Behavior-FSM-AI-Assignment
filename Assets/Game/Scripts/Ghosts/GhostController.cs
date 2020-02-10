@@ -18,7 +18,7 @@ public class GhostController : MonoBehaviour
     public Vector2 ReturnLocation = new Vector2(0, 0);
 
 	private Animator _animator;
-    public Transform PacMan;
+    public PacmanController PacMan;
 	public Vector2 moveToLocation;
 	public float speed;
 

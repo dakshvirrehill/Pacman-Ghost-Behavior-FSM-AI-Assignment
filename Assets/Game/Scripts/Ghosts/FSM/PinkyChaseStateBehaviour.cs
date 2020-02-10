@@ -22,7 +22,14 @@ public class PinkyChaseStateBehaviour : GhostBehaviour
             mReverseDirection = true;
             pFSM.SetTrigger(mController.mScatter);
         }
-
+        else
+        {
+            if (mController.moveToLocation != (new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y) + 4*mController.PacMan.MoveDirections[(int)mController.PacMan.moveDirection]))
+            {
+                mController.moveToLocation = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y) + 4 * mController.PacMan.MoveDirections[(int)mController.PacMan.moveDirection];
+                mController.moveComplete();
+            }
+        }
     }
 
     override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)

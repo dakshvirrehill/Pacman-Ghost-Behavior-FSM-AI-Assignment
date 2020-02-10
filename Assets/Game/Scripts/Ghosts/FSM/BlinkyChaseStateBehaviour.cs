@@ -22,6 +22,14 @@ public class BlinkyChaseStateBehaviour : GhostBehaviour
             mReverseDirection = true;
             pFSM.SetTrigger(mController.mScatter);
         }
+        else
+        {
+            if(mController.moveToLocation.x != mController.PacMan.transform.position.x)
+            {
+                mController.moveToLocation = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y);
+                mController.moveComplete();
+            }
+        }
     }
 
     override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
