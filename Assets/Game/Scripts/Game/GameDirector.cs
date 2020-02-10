@@ -12,9 +12,15 @@ public class GameDirector : Singleton<GameDirector>
 	public float PowerPelletTime = 2.0f;
 	private float powerPelletCounter = 0.0f;
 	public List<GhostController> Ghosts = new List<GhostController>();
+    
+    [HideInInspector]
     public int mTotalPellets;
+    [HideInInspector]
     public int mPelletsConsumed;
-	public enum States
+
+    public float[] mWaveTimers;
+
+    public enum States
 	{
 		enState_Normal,
 		enState_PacmanInvincible,

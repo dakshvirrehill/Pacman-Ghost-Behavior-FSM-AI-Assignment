@@ -5,13 +5,15 @@ using AStarPathfinding;
 using UnityEngine.Events;
 
 public class GhostController : MonoBehaviour 
-{
-	public enum State
+{    
+    public enum MovementDirection
     {
-        InHouse,
-        Scatter,
-        Chase
+        Left,
+        Right,
+        Up,
+        Down
     }
+    
     
     public Vector2 ReturnLocation = new Vector2(0, 0);
 
@@ -20,9 +22,14 @@ public class GhostController : MonoBehaviour
 	public Vector2 moveToLocation;
 	public float speed;
 
-    public State mCurrentState = State.InHouse;
     [HideInInspector]
-    public State mPreviousState = State.InHouse;
+    public bool mIsChasing = true;
+    [HideInInspector]
+    public MovementDirection mDirection = MovementDirection.Left;
+
+
+    int mWaveTimerIx = 0;
+    float mCurrentTimer = 0.0f;
 
     [Header("FSM Trigger Names")]
     public string mChase;
@@ -41,11 +48,38 @@ public class GhostController : MonoBehaviour
 	{
 		_animator = GetComponent<Animator>();
 		GameDirector.Instance.GameStateChanged.AddListener(GameStateChanged);
+        mIsChasing = true;
+    }
 
-	}
+    void Update()
+    {
+        if (GameDirector.Instance.state == GameDirector.States.enState_PacmanInvincible)
+        {
+            return;
+        }
+
+        if (mWaveTimerIx >= GameDirector.Instance.mWaveTimers.Length && !mIsChasing)
+        {
+            mIsChasing = true;
+            mModeChangeEvent.Invoke();
+            return;
+        }
+        mCurrentTimer += Time.deltaTime;
+        if(mCurrentTimer >= GameDirector.Instance.mWaveTimers[mWaveTimerIx])
+        {
+            mWaveTimerIx++;
+            mCurrentTimer = 0.0f;
+            mIsChasing = !mIsChasing;
+            mModeChangeEvent.Invoke();
+        }
+    }
 
     private bool pathCompleted = false;
     public UnityEvent pathCompletedEvent = new UnityEvent();
+    public UnityEvent mModeChangeEvent = new UnityEvent();
+
+
+
 
     public void Move()
 	{
@@ -58,6 +92,22 @@ public class GhostController : MonoBehaviour
 													"speed", speed,
 													"easetype", "linear",
 													"oncomplete", "moveComplete"));
+            if(_path[1].x > transform.position.x)
+            {
+                mDirection = MovementDirection.Right;
+            }
+            else if(_path[1].y > transform.position.y)
+            {
+                mDirection = MovementDirection.Up;
+            }
+            else if(_path[1].x < transform.position.x)
+            {
+                mDirection = MovementDirection.Left;
+            }
+            else if(_path[1].y < transform.position.y)
+            {
+                mDirection = MovementDirection.Down;
+            }
 		}
 		else
 		{
@@ -87,7 +137,7 @@ public class GhostController : MonoBehaviour
 
 	public void Kill()
 	{
-		_animator.SetBool("IsDead", true);
+		_animator.SetBool(mIsDead, true);
 	}
 
 	public void GameStateChanged(GameDirector.States _state)
@@ -95,11 +145,11 @@ public class GhostController : MonoBehaviour
 		switch (_state)
 		{
 			case GameDirector.States.enState_Normal:
-				_animator.SetBool("IsGhost", false);
+				_animator.SetBool(mIsGhost, false);
 				break;
 
 			case GameDirector.States.enState_PacmanInvincible:
-				_animator.SetBool("IsGhost", true);
+				_animator.SetBool(mIsGhost, true);
 				break;
 
 			case GameDirector.States.enState_GameOver:
