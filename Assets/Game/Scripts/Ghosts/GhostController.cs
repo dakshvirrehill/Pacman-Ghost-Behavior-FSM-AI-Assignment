@@ -35,7 +35,6 @@ public class GhostController : MonoBehaviour
     [Header("FSM Trigger Names")]
     public string mChase;
     public string mScatter;
-    public string mDead;
     public string mRestart;
     public string mToHouse;
     public string mFright;
@@ -131,11 +130,8 @@ public class GhostController : MonoBehaviour
 
 	public void moveComplete()
 	{
-		if (GameDirector.Instance.gameOver == false)
-		{
-            StopAllCoroutines();
-            Move();
-		}
+        StopAllCoroutines();
+        Move();
 	}
 
 	public void Kill()
