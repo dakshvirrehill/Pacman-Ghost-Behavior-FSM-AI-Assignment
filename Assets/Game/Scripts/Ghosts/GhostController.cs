@@ -23,6 +23,9 @@ public class GhostController : MonoBehaviour
 	public float speed;
     public float currSpeed;
 
+    public bool mDebugPath;
+    public Color mPathColor;
+
     [HideInInspector]
     public bool mIsChasing = true;
     [HideInInspector]
@@ -55,6 +58,12 @@ public class GhostController : MonoBehaviour
 
     void Update()
     {
+        if(mDebugPath)
+        {
+            Debug.DrawLine(transform.position, moveToLocation, mPathColor);
+        }
+        
+        
         if (GameDirector.Instance.state == GameDirector.States.enState_PacmanInvincible)
         {
             return;
@@ -63,7 +72,6 @@ public class GhostController : MonoBehaviour
         if (mWaveTimerIx >= GameDirector.Instance.mWaveTimers.Length && !mIsChasing)
         {
             mIsChasing = true;
-            mModeChangeEvent.Invoke();
             return;
         }
         mCurrentTimer += Time.deltaTime;
@@ -72,21 +80,19 @@ public class GhostController : MonoBehaviour
             mWaveTimerIx++;
             mCurrentTimer = 0.0f;
             mIsChasing = !mIsChasing;
-            mModeChangeEvent.Invoke();
         }
     }
 
     private bool pathCompleted = false;
     public UnityEvent pathCompletedEvent = new UnityEvent();
-    public UnityEvent mModeChangeEvent = new UnityEvent();
-
 
 
     public void Move()
 	{
 		List<Vector3> _path = new List<Vector3>();
 		PathFinding.Instance.generatePath(transform.position, moveToLocation, _path);
-		if (_path.Count >= 2)
+
+        if (_path.Count >= 2)
 		{
             pathCompleted = false;
 			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(_path[1].x, _path[1].y, 0),
