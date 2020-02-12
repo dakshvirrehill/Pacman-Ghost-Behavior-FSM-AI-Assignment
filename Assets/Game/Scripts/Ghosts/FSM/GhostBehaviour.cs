@@ -11,7 +11,7 @@ public class GhostBehaviour : StateMachineBehaviour
 
     protected bool mReverseDirection = true;
 
-    protected void SetupComponentReferences(Animator pFSM)
+    protected void SetupComponentReferences(Animator pFSM, bool pAddListener = true)
     {
         if(mController != null)
         {
@@ -21,7 +21,10 @@ public class GhostBehaviour : StateMachineBehaviour
         mFSM = pFSM;
         mController = mGhostTransform.GetComponent<GhostController>();
         mAnimator = mGhostTransform.GetComponent<Animator>();
-        GameDirector.Instance.GameStateChanged.AddListener(GameStateChangeCallback);
+        if(pAddListener)
+        {
+            GameDirector.Instance.GameStateChanged.AddListener(GameStateChangeCallback);
+        }
     }
 
     protected void StateExit()
@@ -35,6 +38,10 @@ public class GhostBehaviour : StateMachineBehaviour
         {
             mReverseDirection = false;
             mFSM.SetTrigger(mController.mFright);
+        }
+        else if(pState == GameDirector.States.enState_GameOver)
+        {
+            mFSM.SetTrigger(mController.mToHouse);
         }
     }
 
