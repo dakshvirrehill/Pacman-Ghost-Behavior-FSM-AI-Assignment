@@ -2,33 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InkyChaseStateBehaviour : GhostBehaviour
+public class InkyChaseStateBehaviour : ChaseStateBehaviour
 {
+    public Transform mBlinkyTransform;
 
-    override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
+
+    protected override void UpdatePath()
     {
-        SetupComponentReferences(pFSM);
-        if (mReverseDirection)
+        Vector2 aBlinkyTransform = new Vector2(mBlinkyTransform.position.x, mBlinkyTransform.position.y);
+        Vector2 aPacmanTransform = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y);
+        Vector2 aDesiredLocation = aBlinkyTransform + ((aPacmanTransform + mController.PacMan.MoveDirections[(int)mController.PacMan.moveDirection] * 2) - aBlinkyTransform) * 2;
+        if(aDesiredLocation != mController.moveToLocation)
         {
-            ReverseDirection();
+            mController.moveToLocation = aDesiredLocation;
+            mController.moveComplete();
         }
-
     }
-
-    override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (!mController.mIsChasing)
-        {
-            mReverseDirection = true;
-            pFSM.SetTrigger(mController.mScatter);
-        }
-
-    }
-
-    override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        StateExit();
-    }
-
 }
 

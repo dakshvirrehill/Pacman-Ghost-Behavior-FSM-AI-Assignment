@@ -1,33 +1,28 @@
+using AStarPathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClydeChaseStateBehaviour : GhostBehaviour
+public class ClydeChaseStateBehaviour : ChaseStateBehaviour
 {
+    public int mMaxBlocks;
+    public Vector2 mMainScatterPos;
 
-    override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
+    protected override void UpdatePath()
     {
-        SetupComponentReferences(pFSM);
-        if (mReverseDirection)
+        Vector2 aPacmanCurrentPos = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y);
+        List<Vector3> _path = new List<Vector3>();
+        PathFinding.Instance.generatePath(mGhostTransform.position, aPacmanCurrentPos, _path);
+        if(_path.Count > mMaxBlocks)
         {
-            ReverseDirection();
+            mController.moveToLocation = aPacmanCurrentPos;
+            mController.moveComplete();
         }
-
-    }
-
-    override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (!mController.mIsChasing)
+        else
         {
-            mReverseDirection = true;
-            pFSM.SetTrigger(mController.mScatter);
+            mController.moveToLocation = mMainScatterPos;
+            mController.moveComplete();
         }
-
-    }
-
-    override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        StateExit();
     }
 
 }

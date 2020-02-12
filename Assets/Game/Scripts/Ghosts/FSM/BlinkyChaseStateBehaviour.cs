@@ -2,39 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlinkyChaseStateBehaviour : GhostBehaviour
+public class BlinkyChaseStateBehaviour : ChaseStateBehaviour
 {
-
-    override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
+    protected override void UpdatePath()
     {
-        SetupComponentReferences(pFSM);
-        if (mReverseDirection)
+        if (mController.moveToLocation.x != mController.PacMan.transform.position.x)
         {
-            ReverseDirection();
+            mController.moveToLocation = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y);
+            mController.moveComplete();
         }
-
-    }
-
-    override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (!mController.mIsChasing)
-        {
-            mReverseDirection = true;
-            pFSM.SetTrigger(mController.mScatter);
-        }
-        else
-        {
-            if(mController.moveToLocation.x != mController.PacMan.transform.position.x)
-            {
-                mController.moveToLocation = new Vector2(mController.PacMan.transform.position.x, mController.PacMan.transform.position.y);
-                mController.moveComplete();
-            }
-        }
-    }
-
-    override public void OnStateExit(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        StateExit();
+        mCurrentTimer = 0.0f;
     }
 
 }
