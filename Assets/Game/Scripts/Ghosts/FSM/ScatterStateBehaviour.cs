@@ -6,7 +6,7 @@ public class ScatterStateBehaviour : GhostBehaviour
 {
     public Vector2[] mScatterPositions;
 
-    int mScatterIx = 0;
+    protected int mScatterIx = 0;
 
 
     override public void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
@@ -18,6 +18,7 @@ public class ScatterStateBehaviour : GhostBehaviour
             ReverseDirection();
         }
         mScatterIx = 0;
+        mController.currSpeed = mController.speed;
     }
 
     override public void OnStateUpdate(Animator pFSM, AnimatorStateInfo stateInfo, int layerIndex)
@@ -35,7 +36,7 @@ public class ScatterStateBehaviour : GhostBehaviour
         StateExit();
     }
 
-    void ScatterPathCompleted()
+    protected virtual void ScatterPathCompleted()
     {
         if(mScatterIx >= mScatterPositions.Length)
         {

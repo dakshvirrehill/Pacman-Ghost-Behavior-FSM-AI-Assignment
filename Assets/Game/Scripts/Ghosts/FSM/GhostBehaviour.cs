@@ -34,7 +34,7 @@ public class GhostBehaviour : StateMachineBehaviour
         if (pState == GameDirector.States.enState_PacmanInvincible)
         {
             mReverseDirection = false;
-
+            mFSM.SetTrigger(mController.mFright);
         }
     }
 
