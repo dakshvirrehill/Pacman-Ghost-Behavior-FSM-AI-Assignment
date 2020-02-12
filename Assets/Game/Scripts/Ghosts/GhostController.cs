@@ -21,6 +21,7 @@ public class GhostController : MonoBehaviour
     public PacmanController PacMan;
 	public Vector2 moveToLocation;
 	public float speed;
+    public float currSpeed;
 
     [HideInInspector]
     public bool mIsChasing = true;
@@ -48,7 +49,9 @@ public class GhostController : MonoBehaviour
 	{
 		_animator = GetComponent<Animator>();
 		GameDirector.Instance.GameStateChanged.AddListener(GameStateChanged);
+        GameDirector.Instance.Ghosts.Add(this);
         mIsChasing = true;
+        currSpeed = speed;
     }
 
     void Update()
@@ -80,7 +83,6 @@ public class GhostController : MonoBehaviour
 
 
 
-
     public void Move()
 	{
 		List<Vector3> _path = new List<Vector3>();
@@ -89,7 +91,7 @@ public class GhostController : MonoBehaviour
 		{
             pathCompleted = false;
 			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(_path[1].x, _path[1].y, 0),
-													"speed", speed,
+													"speed", currSpeed,
 													"easetype", "linear",
 													"oncomplete", "moveComplete"));
             if(_path[1].x > transform.position.x)
@@ -131,7 +133,8 @@ public class GhostController : MonoBehaviour
 	{
 		if (GameDirector.Instance.gameOver == false)
 		{
-			Move();
+            StopAllCoroutines();
+            Move();
 		}
 	}
 
