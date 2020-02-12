@@ -1,10 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class InkyChaseStateBehaviour : ChaseStateBehaviour
 {
+    public string mBlinkyObjectName;
     public Transform mBlinkyTransform;
+
+    public override void OnStateEnter(Animator pFSM, AnimatorStateInfo pStateInfo, int pLayerIndex)
+    {
+        if(mBlinkyTransform == null)
+        {
+            foreach(GhostController aGhost in GameDirector.Instance.Ghosts)
+            {
+                if(aGhost.gameObject.name == mBlinkyObjectName)
+                {
+                    mBlinkyTransform = aGhost.gameObject.transform;
+                    break;
+                }
+            }
+        }
+        base.OnStateEnter(pFSM, pStateInfo, pLayerIndex);
+    }
 
 
     protected override void UpdatePath()
@@ -17,6 +35,7 @@ public class InkyChaseStateBehaviour : ChaseStateBehaviour
             mController.moveToLocation = aDesiredLocation;
             mController.moveComplete();
         }
+        mCurrentTimer = 0.0f;
     }
 }
 

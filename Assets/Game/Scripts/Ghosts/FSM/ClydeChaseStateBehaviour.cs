@@ -23,6 +23,7 @@ public class ClydeChaseStateBehaviour : ChaseStateBehaviour
             mController.moveToLocation = mMainScatterPos;
             mController.moveComplete();
         }
+        mCurrentTimer = 0.0f;
     }
 
 }
